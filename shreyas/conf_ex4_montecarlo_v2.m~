@@ -31,7 +31,7 @@ weights = [left_weight, right_weight] ;
 % granularity of X, Y, and omega spaces
 Nx = 300 ; % number of x points
 Ny = 300 ; % number of y points
-Nw = 300 ; % number of omegas
+Nw = 1000 ; % number of omegas
 
 xbds = [-1, 1] ;
 ybds = [-1, 1] ;
@@ -41,8 +41,7 @@ y = linspace(ybds(1),ybds(2),Ny) ;
 XYbds = [-1, 1 ; -1, 1] ;
 
 %% Determine trajectory endpoints for uniform distribution
-w_uniform = linspace(wBounds(1),wBounds(2),Nw) ;
-endpoints = findDubinsTrajectoryEndpoints(T, v, w_uniform) ;
+endpoints = findDubinsTrajectoryEndpoints(Nw, T, linspace(wBounds(1),wBounds(2),Nw)) ;
 
 %% Find original BRS
 % Create grid of points to fill with tallies
@@ -63,19 +62,7 @@ mag = sqrt(Z1End.^2 + Z2End.^2) ;
 % get uniform BRS
 BRS = double(sum(mag <= RT, 3) > 0) ;
 
-%% Create discrete nonuniform distribution of omega
-w = msspoly('pa',1) ; % uncertainty
-[shape, ~] = generateUncertaintyDist(w, wBounds, weights) ;
-w_distribution = msubs(shape,w, linspace(wBounds(1),wBounds(2),3*Nw)) ;
 
-%% Monte Carlo
-% For each point in the BRS, pick 1/3 of the w_distribution randomly,
-% then add it to the endpoint matrix
-for oh_boy = sum(sum(BRS))
-    mini_w_dist = 
-    endpoints = findDubinsTrajectoryEndpoints(Nw, T, 
-end
-                                           
 %% Plot beta distribution
 figure
 

@@ -15,7 +15,7 @@ v = 0.5 ;
 nominal_theta = 0 ;
 
 % omega bounds (omega lies within +/- omegabd
-omegabd = 3*pi/4 ;
+omegabd = pi/4 ;
 
 % target set radius
 RT = sqrt(0.125) ;
@@ -28,9 +28,9 @@ center_weight = 0 ;
 right_weight = 1 ;
 
 % granularity of X, Y, and omega spaces
-Nx = 300 ; % number of x points
-Ny = 300 ; % number of y points
-Nw = 500 ; % number of omegas
+Nx = 350 ; % number of x points
+Ny = 350 ; % number of y points
+Nw = 1000 ; % number of omegas
 
 xbds = [-1, 1] ;
 ybds = [-1, 1] ;
@@ -169,10 +169,10 @@ axis square
 if plot_omega
     thS = linspace(-omegabd, omegabd, Nw) ;
     scale = 1/double(mu_theta{1}(msspoly(1))) ;
-    fplot = ftheta_vec/sum(ftheta_vec) ;
+    fplot = ftheta_vec*scale*2*omegabd ;
     
     subplot(2,2,[3,4])
-    plot(thS,ftheta_vec/sum(ftheta_vec),'b')
+    plot(thS,fplot,'b')
     axis([-omegabd, omegabd, 0, max(fplot)*1.1])
     xlabel('Steering Angle Rate \omega')
     ylabel('Probability')

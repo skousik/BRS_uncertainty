@@ -1,5 +1,5 @@
-function endpoints = findDubinsTrajectoryEndpoints(Nw, T, thetaDist)
-    endpoints = zeros(2,Nw) ;
+function endpoints = findDubinsTrajectoryEndpoints(T, v, thetaDist)
+    endpoints = zeros(2,length(thetaDist)) ;
     idx = 1 ;
 
     TSPAN = [0 T]; % time span
