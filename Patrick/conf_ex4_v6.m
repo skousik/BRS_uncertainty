@@ -3,12 +3,12 @@ clear all
 clc
 close all
 
-degree = 8;
-T = 2;
+degree = 10;
+T = 1;
 freeFinalTime = 0;
 
 nominal_omega = 0; % where the distribution is centered around
-omegabnds = [nominal_omega - pi/2;nominal_omega + pi/2]; % bounds of distribution
+omegabnds = [nominal_omega - 3*pi/4;nominal_omega + 3*pi/4]; % bounds of distribution
 v = 0.5; % speed in m/s
 
 z1bnds = [-1;1]; % bounds on domain of z1
@@ -97,7 +97,7 @@ y = [sqrt(RT.^2-x.^2),-sqrt(RT.^2-x.^2)] ;
 plot(x,y(1:end/2),'r',x(end:-1:1),y(end/2+1:end),'r','LineWidth',2)
 
 figure(1)
-[C,h] = contour(z1,z2,beta,linspace(0,0.5,5));
+[C,h] = contour(z1,z2,beta,linspace(0.2,1,5));
 tl = clabel(C);
 
 for i = 2:2:length(tl)
@@ -116,7 +116,7 @@ axis([omegabnds(1), omegabnds(2), 0, max(ftheta_vec/volume)*1.1])
 
 %% Plot trajectories round 2
 TSPAN = [0 T];
-Y0 = [-0.8;0]; % starting point
+Y0 = [-0.5;0]; % starting point
 
 num_traj = 20; % number of trajectories to plot
 omegas = zeros(num_traj,1); % initialize omegas
