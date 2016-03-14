@@ -14,7 +14,7 @@ v = 0.5 ;
 % starting heading
 nominal_theta = 0 ;
 
-% omega bounds (omega lies within +/- omegabd
+% omega bounds (omega lies within +/- omegabd)
 omegabd = pi/4 ;
 
 % target set radius
@@ -28,8 +28,8 @@ center_weight = 0 ;
 right_weight = 1 ;
 
 % granularity of X, Y, and omega spaces
-Nx = 350 ; % number of x points
-Ny = 350 ; % number of y points
+Nx = 400 ; % number of x points
+Ny = 400 ; % number of y points
 Nw = 1000 ; % number of omegas
 
 xbds = [-1, 1] ;
