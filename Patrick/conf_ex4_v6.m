@@ -14,7 +14,7 @@ v = 0.5; % speed in m/s
 z1bnds = [-1;1]; % bounds on domain of z1
 z2bnds = [-1;1]; % bounds on domain of z2
 
-RT = sqrt(0.125);
+RT = 0.25;
 
 %% define optimization variables
 t = msspoly('t',1); % time
