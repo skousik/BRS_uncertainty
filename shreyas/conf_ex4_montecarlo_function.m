@@ -3,7 +3,7 @@ function [beta, w_plop] = conf_ex4_montecarlo_function(T, v, omegaBounds, ...
 % [beta, w_plop] = conf_ex4_montecarlo_function(T, v, omegaBounds, ...
 %                                   R_T, weights, Nx, Ny, Nw, xbds, ybds)
 %                               
-% Runs a pseudo-Monte-Carlo simulation to generate the BRS of a Dubin's
+% Runs a pseudo-Monte-Carlo simulation to generate the BRS of a Dubins
 % car system given yaw rate uncertainty, and returns the alpha-level
 % confidence surface as an (Nx x Ny) matrix and the distribution of the
 % uncertainty discretized as a (1 x Nw) vector

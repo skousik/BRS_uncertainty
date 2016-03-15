@@ -1,9 +1,9 @@
 % Plotting trajectories for monte carlo
 
 %% Setup
+clc
 clear
 close all
-
 
 % final time
 T = 1 ;
@@ -50,20 +50,20 @@ endpoints = findDubinsTrajectoryEndpoints(T, v, w_uniform) ;
 mag = zeros(Ny,Nx,Nw) ;
 
 % magical matrix tour
-Z1 = repmat(x,Ny,1,Nw) ;
-Z2 = repmat(y',1,Nx,Nw) ;
+X = repmat(x,Ny,1,Nw) ;
+Y = repmat(y',1,Nx,Nw) ;
 
 End1 = repmat(reshape(endpoints(1,:),1,1,Nw),Nx,Ny) ;
 End2 = repmat(reshape(endpoints(2,:),1,1,Nw),Nx,Ny) ;
 
-Z1End = Z1 + End1 ;
-Z2End = Z2 + End2 ;
+XEnd = X + End1 ;
+YEnd = Y + End2 ;
 
-mag = sqrt(Z1End.^2 + Z2End.^2) ;
+mag = sqrt(XEnd.^2 + YEnd.^2) ;
 
 % get uniform BRS
-BRS = double(sum(mag <= RT, 3) > 0) ;
-N_BRS = sum(sum(BRS)) ;
+BRS = sum(mag <= RT, 3) > 0 ;
+N_BRS = sum(sum(double(BRS))) ;
 
 %% Create discrete nonuniform distribution of omega
 w = msspoly('pa',1) ; % uncertainty
@@ -73,19 +73,41 @@ w_distribution = scale*msubs(shape,w, linspace(wBounds(1),wBounds(2),3*Nw)) ;
 
 %% Monte Carlo
 % For the w_distribution, find the endpoints of every w
+tic
 endpoints = findDubinsTrajectoryEndpoints(T, v, w_distribution) ;
-
+toc
+%%
 endx = endpoints(1,:) ;
 endy = endpoints(2,:) ;
 
+%%
+% Create an (Nx*Ny) x Nw matrix of indices
+idx_mat = zeros(Nx*Ny,Nw) ;
 
-% For each point in the BRS, pick 1/3 of the w_distribution randomly,
-% then use these to create the endpoint matrix
-w_dist_random = w_distribution(randperm(3*Nw)) ;
+for point = 1:Nx*Ny
+    idx = randperm(3*Nw) ;
+    idx_mat(point,:) = idx(1:3:end) ;
+end
+
+idx_mat = reshape(idx_mat,Ny,Nx,Nw) ;
+%%
+% create Endx and Endy matrices by using idx_mat to index into endx and
+% endy, then reshaping the resulting matrices
+Endx = endx(idx_mat) ;
+Endy = endy(idx_mat) ;
 
 %%
-BRS_block = repmat(BRS,1,1,Nw) ;
-End1 = reshape(endpoints(1,:),Ny,Nx,Nw) ;
+% Create random-er BRS
+X = repmat(x,Ny,1,Nw) ;
+Y = repmat(y',1,Nx,Nw) ;
+
+XEnd = X + Endx ;
+YEnd = Y + Endy ;
+
+mag = sqrt(XEnd.^2 + YEnd.^2) ;
+
+% get uniform BRS
+beta = sum(mag <= RT, 3)./Nw ;
 
 %% Plot beta distribution
 figure
