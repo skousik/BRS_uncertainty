@@ -216,11 +216,17 @@ axis([-0.8 0.3 -0.54 0.54])
 z3T = z3';
 figure(3)
 hold on
-plot(ftheta_vec,z3T,'k')
+plot(ftheta_vec,z3T,'k','LineWidth',2)
 xlabel('f(\theta)')
 ylabel('Steering Angle Rate \theta')
 title('\theta Distribution')
 axis([0, max(ftheta_vec/volume)*1.1, omegabnds(1), omegabnds(2)])
 for i = 1:length(randos)
-    line([0,ftheta_vec(find(probs>=randos(i),1))],[z3T(find(probs>=randos(i),1)),z3T(find(probs>=randos(i),1))],'Color','m')
+    color = 'm';
+    
+    if i == 19
+        color = 'b';
+    end
+    
+    line([0,ftheta_vec(find(probs>=randos(i),1))],[z3T(find(probs>=randos(i),1)),z3T(find(probs>=randos(i),1))],'Color',color,'LineWidth',0.02)
 end
