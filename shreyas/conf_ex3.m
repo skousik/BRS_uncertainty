@@ -6,7 +6,7 @@
 clc
 clear
 close all
-
+tic
 %% User Input
 degree = 16 ;
 w_crispness = 6 ;
@@ -67,9 +67,11 @@ l = BthBoxL ;
 dth{1} = boxMoments(th{1}, l, u) ;
 
 %% Optimize!
+tic
 [w,sol] = solve_BRS_conf(time, xa, th, f, hXa, hXT, hTh, dth, dl, degree) ;
-
+toc
 %% Plottin'
+tic
 close all
 xaS = linspace(BxaL, BxaU, 100) ; % x space
 thS = linspace(BthBoxL, BthBoxU, 100) ; % theta space
@@ -91,10 +93,8 @@ W1 = msubs(w{1},[xa{1};th{1}],XaTh);
 contour(xaS,thS,reshape(W1,size(Xa)),[1,0], ...
         'Color', [0 0 0.5], 'LineStyle', '--', 'LineWidth', 1.5);
 
-xlabel('X')
-ylabel('\Theta')
-title('BRS True vs. Estimate')
-L = legend('True','Estimate','Location','northwest') ;
+xlabel('x')
+ylabel('\theta')
 
 
 % Plotting mu_theta and beta
@@ -155,8 +155,8 @@ for i = 1:length(left_weights)
     grid on
     plot(xaS,beta,'Color',C{i},'LineWidth',1.5);
     hold on
-    xlabel('X')
-    ylabel('\intw(x,\theta)d\mu_{\theta}')
+    xlabel('x')
+    ylabel('Probability of success')
     
   % Plot true w
     plot(linspace(-0.5,1,gran),intW,'--','Color',C_true{i},'LineWidth',1.5);
@@ -166,10 +166,10 @@ for i = 1:length(left_weights)
     hold on
     plot(thS,f_muth,'Color',C{i},'LineWidth',1.5);
     grid on
-    xlabel('\Theta')
+    xlabel('\theta')
     ylabel('\mu_\theta')
 end
-
+toc
 % % Single distribution, calculate true vs. estimate
 % l_wt = dist_left_weight ;
 % r_wt = degree_mu_theta_poly - l_wt ;
