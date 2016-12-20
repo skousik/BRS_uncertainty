@@ -28,9 +28,9 @@ center_weight = 0 ;
 right_weight = 1 ;
 
 % granularity of X, Y, and omega spaces
-Nx = 250 ; % number of x points
-Ny = 250 ; % number of y points
-Nw = 10000 ; % number of omegas
+Nx = 300 ; % number of x points
+Ny = 300 ; % number of y points
+Nw = 1000 ; % number of omegas
 
 xbds = [-1, 1] ;
 ybds = [-1, 1] ;

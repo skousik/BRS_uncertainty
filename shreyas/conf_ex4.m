@@ -4,7 +4,7 @@ clear all
 clc
 
 %% User Input
-degree = 6 ;
+degree = 10 ;
 v = 1 ; % speed in m/s
 th_nom = 45 ; % heading angle in deg
 R = 0.5 ; % radius of target set

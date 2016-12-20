@@ -8,13 +8,14 @@ clear
 close all
 tic
 %% User Input
-degree = 16 ;
+degree = 18 ;
 w_crispness = 6 ;
 degree_mu_theta_poly = 6 ;
-left_weights = [1,5] ;
+% left_weights = [1] ;
+left_weights = [5] ;
 w_colors = {[0.9 0.2 0],[0 0.2 0.9]} ;
-w_true_colors = {[0 0 1],[1 0 0]} ;
-true_theta_granularity = 600 ;
+w_true_colors = {[1 0 0],[0 0 1]} ;
+true_theta_granularity = 100 ;
 
 % X bounds
 BxaU =  1 ; % lower
@@ -78,26 +79,33 @@ thS = linspace(BthBoxL, BthBoxU, 100) ; % theta space
 [Xa, Th] = meshgrid(xaS, thS) ;
 XaTh = [Xa(:) Th(:)]';
 orange = [0.8 0.5 0] ;
+outer_green = [0.1 0.5 0] ;
+green = [0.1 0.7 0] ;
 
-subplot(311)
+% subplot(311)
+figure(1)
 grid on
 hold on
+
+% Plot X_T
+plot([0,1,1,0,0],2.*[-0.5,-0.5,0.5,0.5,-0.5],'Color',orange,'LineWidth',1.5)
 
 % Plot the true BRS
 xa_true = [-0.5, 0.5, 1.0,  1.0,  0.5, -0.5] ;
 th_true = [ 0.5, 0.5, 0.0, -0.5, -0.5,  0.5] ;
-plot(xa_true, th_true, 'Color', orange, 'LineWidth', 1.5) ;
+plot(xa_true, th_true, 'Color', outer_green, 'LineWidth', 2) ;
 
 % Plot the estimate
 W1 = msubs(w{1},[xa{1};th{1}],XaTh);
 contour(xaS,thS,reshape(W1,size(Xa)),[1,0], ...
-        'Color', [0 0 0.5], 'LineStyle', '--', 'LineWidth', 1.5);
+        'Color', green, 'LineStyle','--', 'LineWidth', 2);
 
 xlabel('x')
 ylabel('\theta')
 
+set(gca,'FontSize',20)
 
-% Plotting mu_theta and beta
+%% Plotting mu_theta and beta
 % Here, we approximate mu_theta with an even-ordered polynomial on its
 % support, and vary the distribution from left- to right-tailed by changing
 % the weights of the repeated zeros at the left and right bounds of
@@ -128,7 +136,7 @@ for i = 1:length(left_weights)
     % weight of right root
     r_wt  = degree_mu_theta_poly - l_wt ;
     % RN-derivative shape function as a polynomial
-    [shape, shape_int] = generateUncertaintyDist(th, ...
+    [shape, ~] = generateUncertaintyDist(th, ...
                             [BthL, BthU], [l_wt, r_wt]) ;
 
     mu{1} = boxMoments_shape(th{1}, shape, BthL, BthU) ;
@@ -137,41 +145,51 @@ for i = 1:length(left_weights)
     k = w_crispness ; % determines crispness of w plot
     
     % f_muth is the RN-derivative
-    f_muth = msubs(shape,th{1},thS) ;
+    f_muth_1 = msubs(shape,th{1},thS) ;
     
     % w_xath is w as a discretized function of x, integrated over Theta
     w_xath = reshape(min(1,(msubs(w{1},[xa{1}; th{1}], XaTh))).^(2^k), size(Xa)) ;
     
     % beta is the discretized w evaluated at each x
-    beta = (dTh/length(thS))*f_muth*w_xath ;
+    beta = (dTh/length(thS))*f_muth_1*w_xath ;
+    
+    
+    [shape, ~] = generateUncertaintyDist(th, ...
+                        [BthL, BthU], [r_wt, l_wt]) ;
+                        % f_muth is the RN-derivative
+    f_muth_2 = msubs(shape,th{1},thS) ;
   
   % Generate true beta
-    F = repmat(f_muth',1,gran)*(dTh/length(thS)) ;
+    F = repmat(f_muth_2',1,gran)*(dTh/length(thS)) ;
     intW = sum(F.*W) ;
     
   % Plot w
-    subplot(312)
+%     subplot(312)
+    figure(2)
     hold on
     grid on
-    plot(xaS,beta,'Color',C{i},'LineWidth',1.5);
+    plot(xaS,beta,'--','Color',C{i},'LineWidth',2);
     hold on
     xlabel('x')
     ylabel('Probability of success')
+    set(gca,'FontSize',20)
     
   % Plot true w
-    plot(linspace(-0.5,1,gran),intW,'--','Color',C_true{i},'LineWidth',1.5);
+    plot(linspace(-0.5,1,gran),intW,'Color',C_true{i},'LineWidth',2);
     
   % Plot mu_theta distribution
-    subplot(313)
+%     subplot(313)
+    figure(3)
     hold on
-    plot(thS,f_muth,'Color',C{i},'LineWidth',1.5);
+    plot(thS,f_muth_1,'Color',C{i},'LineWidth',2);
     grid on
     xlabel('\theta')
     ylabel('\mu_\theta')
+    set(gca,'FontSize',24)
 end
 toc
-% % Single distribution, calculate true vs. estimate
-% l_wt = dist_left_weight ;
+% %% Single distribution, calculate true vs. estimate
+% l_wt = 1 ;
 % r_wt = degree_mu_theta_poly - l_wt ;
 % shape = -1*(t-BthU)^(r_wt)*(t-BthL)^(l_wt) ; % f as a function of theta, with weights flipped
 % gran = 600 ; % fineness of true w plot
